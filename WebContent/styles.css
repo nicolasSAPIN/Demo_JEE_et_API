@@ -1,0 +1,32 @@
+h1, h2, form {
+	text-align: center;
+}
+
+h1 {
+	color: blue;
+}
+
+
+label {
+	display: inline-block;
+	width: 120px;
+	text-align: left;
+}
+
+th, td {
+	color: #000000;
+	width: 120px;
+	}
+th{text-align: center;}
+.btn:hover, 
+.btn:focus {
+		font-size:35px;	
+	
+  box-shadow: 0 0 0 2em rgba(#fff,0);
+}
+.btn{
+	display:inline;
+	text-align: center;
+	border : 2px;
+	font-size:24px;	
+}

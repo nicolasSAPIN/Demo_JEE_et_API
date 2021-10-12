@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Demo BEETWEEN</title>
+		<meta name='viewport' content='width=device-width, initial-scale=1'>
+		<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	</head>
+	<body class=" bg-dark text-white" onload="afficherUsers()">
+	<div class="container">
+	  <div class="row">
+	  <p>Liste :</p>
+	  
+	  <div id="listeUsers" class="listeUsers col-sm text-white">
+	  		<table id="table_listeUser" class="table table-sm text-white ">
+				<tr>
+					<th scope="col">id</th>
+					<th  scope="col">first name</th>
+					<th  scope="col">last name</th>
+					<th  scope="col">email</th>
+					<th  scope="col">phone</th>
+					<th  scope="col">password</th>
+				</tr>
+			</table>
+	  </div>
+		    <div class="col-sm">
+				  	<div class="form-group">
+
+						<label for="first_name" class="col-sm-4 col-form-label">first name</label>
+						<input type="text" id="first_name" name="first_name"  class="form-control"  placeholder="first name" value=""/>
+					</div>
+					<div class="form-group">
+						<label for:"last_name" class="col-sm-4 col-form-label">Last name : </label>	
+						<input type="text" id="last_name" name="last_name" class="form-control"   placeholder="Last name" value=""/>
+					</div>
+					<div class="form-group">	
+						<label for:"email"  class="col-sm-4 col-form-label">Email : </label>
+						<input type="text" id="email" name="email"  class="form-control"  placeholder="Email" value=""/>
+					</div>
+					<div class="form-group">
+						<label for:"phone"  class="col-sm-4 col-form-label">Phone : </label>
+						<input type="text" id="phone" name="phone" class="form-control"  placeholder="Phone" value=""/>	
+					</div>
+					<div class="form-group">
+						<label for:"password"class="col-sm-4 col-form-label" >Password : </label>
+						<input type="text" id="password" name="password" class="form-control"  placeholder="Password" value=""/>	
+					</div>
+					<div class="col-auto">
+						<input type="button" name="btn_submit"  class="btn btn-primary mb-2" value="Add" onclick="ajouterUser()">
+					</div>
+			</div>  
+		</div>
+	</div>	
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+		<script type="text/javascript">
+		
+		
+//-----------XHR create
+			function createXHR() { //XmlHTTPRequest
+				if (window.XMLHttpRequest)
+					xhr = new XMLHttpRequest();
+				else if (window.ActiveXObject)// declaration pour internet explorer
+					xhr = new ActiveXObject("Msxml2.XMLHTTP");
+			
+				return xhr;
+			}	
+			
+			 
+//----------POST - Ajout 
+			function ajouterUser() {
+				
+				var xhr = createXHR();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						afficherNouveauUser(xhr.responseText);
+					}
+				};
+				var firstName = document.getElementById("first_name");
+				var lastName = document.getElementById("last_name");
+				var email = document.getElementById("email");
+				var phone = document.getElementById("phone");
+				var password = document.getElementById("password");
+				
+				datasFormulaire = "firstName=" + encodeURIComponent(firstName.value);
+				datasFormulaire = datasFormulaire +"&lastName=" + encodeURIComponent(lastName.value) ;
+				datasFormulaire = datasFormulaire +"&email=" + encodeURIComponent(email.value) ;
+				datasFormulaire = datasFormulaire +"&phone=" + encodeURIComponent(phone.value) ;
+				datasFormulaire = datasFormulaire +"&password=" + encodeURIComponent(password.value) ;
+				
+				xhr.open("POST", "/Demo1/rest/users/", true);
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.send(datasFormulaire);
+			}
+			
+
+//---------- PUT - Update 
+			function modifier(user) {
+				
+				var xhr = createXHR();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						var reponseJSON = JSON.parse(xhr.responseText);
+						user.value = reponseJSON.content; 
+					}
+				};
+			
+				datasFormulaire = "firstName=" + encodeURIComponent(firstName.value);
+				datasFormulaire = datasFormulaire +"&lastName=" + encodeURIComponent(lastName.value) ;
+				datasFormulaire = datasFormulaire +"&email=" + encodeURIComponent(email.value) ;
+				datasFormulaire = datasFormulaire +"&phone=" + encodeURIComponent(phone.value) ;
+				datasFormulaire = datasFormulaire +"&password=" + encodeURIComponent(password.value) ;
+				
+				xhr.open("PUT", "/Demo1/rest/users/" + id, true);
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.send(datasFormulaire);
+			}
+						
+			
+//---------- DELETE - function supprimer(id)
+			function supprimer(div,id)
+			{
+				var xhr = createXHR();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						div.remove();
+					}
+				};
+				xhr.open("DELETE", "/Demo1/rest/users/" + id, true);
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.send();
+			}
+			
+//---------- Afficher Users
+			function afficherUsers() {
+				var xhr = createXHR();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						afficherTousLesUsers(xhr.responseText);
+					}
+				};
+				xhr.open("GET", "/Demo1/rest/users/", true);
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.send();
+			}
+			
+//----------Afficher nouv user	
+			function afficherNouveauUser(reponse) {
+				var reponseJSON = JSON.parse(reponse);
+				creerHTMLUser(reponseJSON);
+			}
+			
+//----------Afficher tous users	
+			function afficherTousLesUsers(reponse) {
+				var reponseJSON = JSON.parse(reponse);
+				for (i=0; i<reponseJSON.length; i++) {
+					creerHTMLUser(reponseJSON[i]);
+					
+//----------  Création du HTML et position ds le DOM
+			function creerHTMLUser(reponseJSON) {
+									//reponseJSON représente UN user au format JSON
+				var listeUsers = document.getElementById("listeUsers");
+				var uneDiv = document.createElement("div");
+				
+				var table_listeUser = document.getElementById("table_listeUser");
+				var tr_liste = document.createElement("tr");
+
+				//id
+				var userId_td = document.createElement("td");
+				userId_td.scop="col";
+				userId_td.innerHTML = reponseJSON.id;	
+				/*
+				var userId_td = document.createElement("input");
+				userId_td.type="text";
+				userId_td.Id="first_name";
+				userId_td.innerHTML = reponseJSON.firstName;
+				*/
+								
+				//first_Name
+				var userFirstName_td = document.createElement("td");
+				userFirstName_td.scop="col";
+				userFirstName_td.innerHTML = reponseJSON.firstName;
+				/*
+				var userfirstName = document.createElement("input");
+				userfirstName.type="text";
+				userfirstName.Id="first_name";
+				userfirstName.innerHTML = reponseJSON.firstName;
+
+				*/
+				//last_name
+				var userLastName_td = document.createElement("td");
+				userLastName_td.scop="col";
+				userLastName_td.innerHTML = reponseJSON.lastName;
+				/*
+				var userLastName_td = doc
+				var userlasttName = document.createElement("input");
+				userlasttName.type="text";
+				userlasttName.Id="last_name";
+				userlasttName.innerHTML = reponseJSON.lastName;
+				*/			
+				
+				//email
+				var userEmail_td = document.createElement("td");
+				userEmail_td.scop="col";
+				userEmail_td.innerHTML = reponseJSON.email;
+				
+				/*
+				var userEmail = document.createElement("input");
+				userEmail.type="text";
+				userEmail.Id="email";
+				userEmail.innerHTML = reponseJSON.email;
+				*/
+				
+				//phone
+				var userPhone_td = document.createElement("td");
+				userPhone_td.scop="col";
+				userPhone_td.innerHTML = reponseJSON.phone;				
+				/*
+				var userPhone = document.createElement("input");
+				userPhone.type="text";
+				userPhone.Id="phone";
+				userPhone.innerHTML = reponseJSON.phone;
+				*/
+				
+				//password
+				var userPassword_td = document.createElement("td");
+				userPassword_td.scop="col";
+				userPassword_td.innerHTML = reponseJSON.password;	
+				/*
+				var userPassword = document.createElement("input");
+				userPassword.type="password";
+				userPassword.Id="password";
+				userPassword.innerHTML = reponseJSON.password
+				*/				
+				
+				//btn_modifier
+				var boutonModifier = document.createElement("input");
+				boutonModifier.type="button";
+				boutonModifier.name="btn_updt";
+				boutonModifier.value="Modifier";
+				boutonModifier.class="btn btn-link"
+				boutonModifier.innerHTML="<i class='fas fa-edit' style='color:orange; display:inline;'></i>"
+				boutonModifier.onclick=function() {modifier(UnUser, reponseJSON.id)};
+
+				//btn_supprimer
+				var boutonSupprimer = document.createElement("input");
+				boutonSupprimer.type="button";
+				boutonModifier.name="btn_del";
+				boutonSupprimer.value="Supprimer";
+				boutonModifier.class="btn btn-link"
+				boutonModifier.innerHTML="<i class='fas fa-times-circle' style='color:red; display:inline;'></i>"
+				boutonSupprimer.onclick=function() {supprimer(uneDiv, reponseJSON.id)};
+				
+				/*	
+				var boutonModifier = document.createElement("input");
+				boutonModifier.type="button";
+				boutonModifier.name="btn_updt";
+				boutonModifier.value="Modifier";
+				boutonModifier.class="btn btn-link"
+				boutonModifier.onclick=function() {modifier(UnUser, reponseJSON.id)};
+				// <input type="button" value="Modifier" onclick="modifier(UnUser, reponseJSON.id)"/>			
+				// <input type="button" value="Supprimer" onclick="supprimer(uneDiv, reponseJSON.id)"/>
+				var boutonSupprimer = document.createElement("input");
+				boutonSupprimer.type="button";
+				boutonSupprimer.value="Supprimer";
+				boutonSupprimer.onclick=function() {supprimer(uneDiv, reponseJSON.id)};
+				*/
+				
+				//Apres la création, le placement
+				tr_liste.appendChild(userId_td);
+				tr_liste.appendChild(userFirstName_td);
+				tr_liste.appendChild(userLastName_td);
+				tr_liste.appendChild(userEmail_td);
+				tr_liste.appendChild(userPhone_td);
+				tr_liste.appendChild(userPassword_td);
+				table_listeUser.appendChild(tr_liste);
+				
+				/*
+				uneDiv.appendChild(userfirstName);
+				uneDiv.appendChild(userlasttName);
+				uneDiv.appendChild(userEmail);
+				uneDiv.appendChild(userPhone);
+				uneDiv.appendChild(userPassword);
+				uneDiv.appendChild(boutonModifier);
+				uneDiv.appendChild(boutonSupprimer);
+				*/
+				
+			}		
+	}
+			}
+							
+		</script>
+	</body>
+</html>

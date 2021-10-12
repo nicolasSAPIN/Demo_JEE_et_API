@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<div>
+
+		<input type="button" value="Ajouter" onclick="ajouter()" />
+
+	</div>
+	
+	
+	<div>
+
+		<input type="button" value="Lister" onclick="lister()" />
+
+	</div>
+	
+	<div id="succes" style="color: green"></div>
+
+	<div id="echec" style="color: red"></div>
+	
+	
+	
+	<script type="text/javascript">
+	function createXHR() {
+
+		if (window.XMLHttpRequest) {//  Objet standard 		
+			xhr = new XMLHttpRequest(); //  Firefox, Safari, ... 
+		}
+
+		else if (window.ActiveXObject){ //  Internet Explorer 
+			xhr = new ActiveXObject("Msxml2.XMLHTTP");
+		}
+		xhr.onreadystatechange = function(){
+			if (xhr.readyState == 4){
+				if (xhr.status == 200){
+					succes(xhr.responseText);//xhr.responseXML si réponse XML 
+				}
+				else{
+					echec(xhr.status, xhr.responseText);
+				}
+			}
+		};
+	
+	function ajouter()
+	{
+		var xhr = createXHR();
+		datasFormulaire = "firstName=" + encodeURIComponent("test") +"&lastName=" + encodeURIComponent("test") +"&email=" + encodeURIComponent("test") +"&password=" + encodeURIComponent("test") +"&phone=" + encodeURIComponent("test");
+		xhr.open("POST", "/Demo1/rest/users/", true);
+		xhr.setRequestHeader("Accept", "application/json");
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(datasFormulaire);
+	}
+	
+	
+	
+	function lister()
+	{
+		var xhr = createXHR();
+		xhr.open("GET", "/DemoWebservices/rest/users/", true);
+		xhr.setRequestHeader("Accept", "application/json");
+		xhr.send();
+	}
+	
+	function succes(reponse)
+	{
+		document.getElementById("succes").innerHTML = reponse;
+		document.getElementById("echec").innerHTML = "";
+	}
+
+	function echec(codeReponse, reponse)
+	{
+		document.getElementById("echec").innerHTML = reponse;
+		document.getElementById("succes").innerHTML = "";
+	}
+
+	}
+	</script>
+	
+</body>
+</html>
